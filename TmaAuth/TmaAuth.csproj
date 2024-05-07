@@ -11,6 +11,9 @@
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.MD</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>TMA,TMA Auth, Authentication, Telegram Mini App Auth</PackageTags>
+    <RepositoryUrl>https://github.com/apashintsev/TmaAuth</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/apashintsev/TmaAuth</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

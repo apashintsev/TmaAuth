@@ -37,7 +37,6 @@ public class WeatherForecastController : ControllerBase
     [Authorize(AuthenticationSchemes = TmaTokenDefaults.AuthenticationScheme)]
     public IActionResult GetSecureData()
     {
-        // Получение идентификатора пользователя из claims
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var username = User.FindFirst(ClaimTypes.Name)?.Value;
 

@@ -15,7 +15,7 @@ This library provides an easy-to-use extension for integrating Telegram Mini App
 To install the Telegram Authentication Extensions, you can use the following NuGet command:
 
 ```bash
-dotnet add package YourPackageName --version 1.0.0
+dotnet add package tmaauth --version 1.0.0
 ```
 
 ## Usage
@@ -74,7 +74,6 @@ public class WeatherForecastController : ControllerBase
     [Authorize(AuthenticationSchemes = TmaTokenDefaults.AuthenticationScheme)]
     public IActionResult GetSecureData()
     {
-        // Получение идентификатора пользователя из claims
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         var username = User.FindFirst(ClaimTypes.Name)?.Value;
 
