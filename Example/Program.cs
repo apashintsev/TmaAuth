@@ -23,7 +23,7 @@ namespace Example
                 {
                     policy.AddAuthenticationSchemes(TmaTokenDefaults.AuthenticationScheme);
                     policy.RequireClaim(ClaimTypes.NameIdentifier);
-                    policy.RequireClaim(TmaClaim.IsPremium, "true");  // Требуем, чтобы пользователь был премиум-пользователем
+                    policy.RequireClaim(TmaClaim.IsPremium, "true");  // user must have premium account to access
                 });
             });
 

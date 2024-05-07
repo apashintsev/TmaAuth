@@ -35,7 +35,7 @@ To secure an API endpoint using the Telegram Mini App authentication scheme, sim
                 {
                     policy.AddAuthenticationSchemes(TmaTokenDefaults.AuthenticationScheme);
                     policy.RequireClaim(ClaimTypes.NameIdentifier);
-                    policy.RequireClaim(TmaClaim.IsPremium, "true");  // Требуем, чтобы пользователь был премиум-пользователем
+                    policy.RequireClaim(TmaClaim.IsPremium, "true");  
                 });
             });
 ```
