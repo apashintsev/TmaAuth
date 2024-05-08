@@ -88,3 +88,13 @@ public class WeatherForecastController : ControllerBase
     }
 }
 ```
+
+
+
+## License
+
+This package is released under the [MIT License](LICENSE).
+
+## Donations
+
+TON - `UQAN9eHzTT6ntU0LSIcqwLJz9GdzeUAOjeXr0x8_XWO0W9S5`
