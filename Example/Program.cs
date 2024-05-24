@@ -1,4 +1,4 @@
-
+using Example.Hubs;
 using System.Security.Claims;
 using TmaAuth;
 
@@ -25,7 +25,20 @@ namespace Example
             .AddTelegramMiniAppToken(options =>
             {
                 options.BotToken = builder.Configuration["TelegramOptions:BotToken"];
+                options.Events = new TmaEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+                        if (!string.IsNullOrEmpty(accessToken) && context.Request.Path.StartsWithSegments("/balance"))
+                        {
+                            context.InitDataRaw = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
             });
+
 
             builder.Services.AddAuthorization(options =>
             {
@@ -36,8 +49,8 @@ namespace Example
                     policy.RequireClaim(TmaClaim.IsPremium, "true");  // user must have premium account to access
                 });
             });
-
-
+            builder.Services.AddSignalR();
+            builder.Services.AddScoped<IBalanceNotificationService, BalanceHub>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -60,6 +73,7 @@ namespace Example
 
 
             app.MapControllers();
+            app.MapHub<BalanceHub>("/balance");
 
             app.Run();
         }

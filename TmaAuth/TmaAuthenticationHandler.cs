@@ -32,20 +32,49 @@ public class TmaAuthenticationHandler : AuthenticationHandler<TelegramAuthentica
     }
 
     /// <summary>
+    /// The handler calls methods on the events which give the application control at certain points where processing is occurring.
+    /// If it is not provided a default instance is supplied which does nothing when the methods are called.
+    /// </summary>
+    protected new TmaEvents Events
+    {
+        get => (TmaEvents)base.Events!;
+        set => base.Events = value;
+    }
+
+    /// <summary>
     /// Processes and validates the authentication request.
     /// </summary>
     /// <returns>The result of the authentication process.</returns>
-    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        var authorizationHeader = Request.Headers["Authorization"].ToString();
-        if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("tma "))
-        {
-            return Task.FromResult(AuthenticateResult.Fail("Unauthorized"));
-        }
+        string? initDataRaw;
 
-        string initDataRaw = authorizationHeader.Substring(4);
         try
         {
+            // Give application opportunity to find from a different location, adjust, or reject token
+            var messageReceivedContext = new MessageReceivedContext(Context, Scheme, Options);
+
+            // event can set the token
+            await Events.MessageReceived(messageReceivedContext);
+            if (messageReceivedContext.Result != null)
+            {
+                return messageReceivedContext.Result;
+            }
+
+            // If application retrieved token from somewhere else, use that.
+            initDataRaw = messageReceivedContext.InitDataRaw;
+
+            if (string.IsNullOrEmpty(initDataRaw))
+            {
+                var authorizationHeader = Request.Headers["Authorization"].ToString();
+                if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("tma "))
+                {
+                    return AuthenticateResult.Fail("Unauthorized");
+                }
+
+                initDataRaw = authorizationHeader.Substring(4);
+            }
+
             ValidateInitData(initDataRaw);
 
             var parsedData = HttpUtility.ParseQueryString(initDataRaw);
@@ -67,11 +96,11 @@ public class TmaAuthenticationHandler : AuthenticationHandler<TelegramAuthentica
             var principal = new ClaimsPrincipal(identity);
             var ticket = new AuthenticationTicket(principal, Scheme.Name);
 
-            return Task.FromResult(AuthenticateResult.Success(ticket));
+            return AuthenticateResult.Success(ticket);
         }
         catch (TelegramValidationException ex)
         {
-            return Task.FromResult(AuthenticateResult.Fail(ex.Message));
+            return AuthenticateResult.Fail(ex.Message);
         }
     }
 
