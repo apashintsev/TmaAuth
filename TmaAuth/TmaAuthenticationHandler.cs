@@ -84,12 +84,12 @@ public class TmaAuthenticationHandler : AuthenticationHandler<TelegramAuthentica
             var claims = new List<Claim>
             {
                 new (ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new (ClaimTypes.Name, user.Username),
-                new (TmaClaim.FirstName, user.FirstName),
-                new (TmaClaim.LastName, user.LastName),
+                new (ClaimTypes.Name, string.IsNullOrWhiteSpace(user.Username)?"Unknown":user.Username),
+                new (TmaClaim.FirstName, string.IsNullOrWhiteSpace(user.FirstName)?"Unknown":user.FirstName),
+                new (TmaClaim.LastName, string.IsNullOrWhiteSpace(user.LastName) ? "Unknown" : user.LastName),
                 new (ClaimTypes.Locality, user.LanguageCode),
                 new (TmaClaim.IsPremium, user.IsPremium.ToString()),
-                new (TmaClaim.AllowsWriteToPM, user.AllowsWriteToPm.ToString())
+                //new (TmaClaim.AllowsWriteToPM, user.AllowsWriteToPm.ToString())
             };
 
             var identity = new ClaimsIdentity(claims, Scheme.Name);
