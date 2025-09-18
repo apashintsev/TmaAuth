@@ -22,7 +22,7 @@ public static class TelegramMiniAppAuthenticationExtensions
     public static AuthenticationBuilder AddTelegramMiniAppToken(this AuthenticationBuilder builder, Action<TelegramAuthenticationOptions> configureOptions)
     {
         return builder.AddScheme<TelegramAuthenticationOptions, TmaAuthenticationHandler>(
-            $"{TmaTokenDefaults.AuthenticationScheme.ToLower()}",
+            $"{TmaTokenDefaults.AuthenticationScheme}",
             configureOptions);
     }
 }
