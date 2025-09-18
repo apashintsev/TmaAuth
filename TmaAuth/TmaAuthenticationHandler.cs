@@ -75,6 +75,9 @@ public class TmaAuthenticationHandler : AuthenticationHandler<TelegramAuthentica
                 initDataRaw = authorizationHeader.Substring(4);
             }
 
+            if (string.IsNullOrEmpty(initDataRaw))
+                return AuthenticateResult.NoResult();
+
             ValidateInitData(initDataRaw);
 
             var parsedData = HttpUtility.ParseQueryString(initDataRaw);
