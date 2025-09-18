@@ -67,12 +67,11 @@ public class TmaAuthenticationHandler : AuthenticationHandler<TelegramAuthentica
             if (string.IsNullOrEmpty(initDataRaw))
             {
                 var authorizationHeader = Request.Headers["Authorization"].ToString();
-                if (string.IsNullOrEmpty(authorizationHeader) || !authorizationHeader.StartsWith("tma "))
+                if (!string.IsNullOrEmpty(authorizationHeader) &&
+                    authorizationHeader.StartsWith("tma ", StringComparison.OrdinalIgnoreCase))
                 {
-                    return AuthenticateResult.Fail("Unauthorized");
+                    initDataRaw = authorizationHeader.Substring(4);
                 }
-
-                initDataRaw = authorizationHeader.Substring(4);
             }
 
             if (string.IsNullOrEmpty(initDataRaw))
